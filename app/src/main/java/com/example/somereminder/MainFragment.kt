@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.viewbinding.library.fragment.viewBinding
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.somereminder.databinding.FragmentMainBinding
@@ -34,6 +35,9 @@ class MainFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = RecyclerAdapter(fillList())
 
+        binding.fab.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_addTaskFragment)
+        }
 
     }
 
