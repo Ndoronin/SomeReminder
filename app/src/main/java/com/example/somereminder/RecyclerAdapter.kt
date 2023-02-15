@@ -7,9 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 
-class RecyclerAdapter(private val names: List<String>):
+class RecyclerAdapter():
     RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
-
+    private var taskList = emptyList<Task>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView =
@@ -23,22 +23,25 @@ class RecyclerAdapter(private val names: List<String>):
 
 
         // val currentItem = expenseList[position]
-        holder.largeTextView.text = names[position]
-        holder.smallTextView.text = "кот"
+        val currentItem = taskList[position]
+        holder.largeTextView.text = taskList[position].task
+        holder.smallTextView.text = taskList[position].date
         /* holder.rowLayout.setOnClickListener {
 
              holder.itemView.findNavController().navigate(FirstFragmentDirections.actionFirstFragmentToExpenseEditFragment(currentItem))
          }*/
     }
 
+    fun setData(tasks: List<Task>){
+        this.taskList = tasks
+        notifyDataSetChanged()
+    }
 
-    override fun getItemCount() = names.size
+    override fun getItemCount() = taskList.size
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val largeTextView: TextView = itemView.findViewById(R.id.textViewLarge)
         val smallTextView: TextView = itemView.findViewById(R.id.textViewSmall)
-
-
     }
 }
 

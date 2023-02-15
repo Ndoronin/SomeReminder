@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.viewbinding.library.fragment.viewBinding
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +17,8 @@ import com.example.somereminder.databinding.FragmentMainBinding
 class MainFragment : Fragment() {
 
     private val binding: FragmentMainBinding by viewBinding()
+
+    private lateinit var mTaskViewModel: TaskViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,19 +35,22 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recyclerView: RecyclerView = binding.recyclerView
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = RecyclerAdapter(fillList())
 
+        //RecyclerView
+        val recyclerView: RecyclerView = binding.recyclerView
+        val adapter = RecyclerAdapter()
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
+
+        //View Model
+        mTaskViewModel = ViewModelProvider(this)[TaskViewModel::class.java]
+        mTaskViewModel.readAllData.observe(viewLifecycleOwner, Observer { task->
+            adapter.setData(task)
+        })
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_addTaskFragment)
         }
 
     }
 
-    private fun fillList(): List<String> {
-        val data = mutableListOf<String>()
-        (0..30).forEach { i -> data.add("$i element") }
-        return data
-    }
 }
